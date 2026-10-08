@@ -7,14 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AmountInput extends StatefulWidget {
   final TransactionType selectedType;
-  const AmountInput({super.key,required this.selectedType});
+  final TextEditingController controller;
+  const AmountInput({super.key,required this.selectedType,required this.controller});
 
   @override
   State<AmountInput> createState() => _AmountInputState();
 }
 
 class _AmountInputState extends State<AmountInput> {
-  TextEditingController textEditingController = TextEditingController();
   Timer? timer;
   Timer? delayTimer;
 
@@ -22,7 +22,6 @@ class _AmountInputState extends State<AmountInput> {
   void dispose() {
     timer?.cancel();
     delayTimer?.cancel();
-    textEditingController.dispose();
     super.dispose();
   }
 
@@ -86,7 +85,7 @@ class _AmountInputState extends State<AmountInput> {
         addAmount(amount);
       },
       child: Ink(
-        padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: AppColors.surfaceLight,
@@ -123,16 +122,18 @@ class _AmountInputState extends State<AmountInput> {
   Widget _buildAmountField(TextTheme textTheme) {
     return Expanded(
       child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         style: textTheme.titleLarge!.copyWith(color: AppColors.mutedText),
         keyboardType: TextInputType.number,
         validator: (value) {
+          
           final text = value?.trim() ?? '';
 
           if (text.isEmpty) {
             return 'Please enter an amount';
           }
 
-          final pattern = RegExp(r'^(0|[1-9]\d*)(\.\d*)?$');
+          final pattern = RegExp(r'^(?=.*[1-9])((0\.\d*)|([1-9]\d*(\.\d*)?)|\.\d+)$');
 
           if (!pattern.hasMatch(text)) {
             return 'Invalid amount';
@@ -143,31 +144,30 @@ class _AmountInputState extends State<AmountInput> {
         inputFormatters: [FilteringTextInputFormatter.deny(',')],
         decoration: InputDecoration(
           hintText: '0',
-
           hintStyle: textTheme.titleLarge!.copyWith(
-            color: AppColors.mutedText.withValues(alpha: 0.5),
+            color: AppColors.hintTextColor,
           ),
         ),
         textAlign: TextAlign.center,
-        controller: textEditingController,
+        controller: widget.controller,
       ),
     );
   }
 
   void increaseAmount() {
-    num? value = num.tryParse(textEditingController.text);
+    num? value = num.tryParse(widget.controller.text);
     value ??= 0;
     value += 0.01;
-    textEditingController.text = value.toStringAsFixed(2);
+    widget.controller.text = value.toStringAsFixed(2);
   }
 
   void decreaseAmount() {
-    num? value = num.tryParse(textEditingController.text);
+    num? value = num.tryParse(widget.controller.text);
     if (value == null || value == 0 || value < 0.01) {
       return;
     }
     value -= 0.01;
-    textEditingController.text = value.toStringAsFixed(2);
+    widget.controller.text = value.toStringAsFixed(2);
   }
 
   void startChanging(VoidCallback changeAmount) {
@@ -190,9 +190,9 @@ class _AmountInputState extends State<AmountInput> {
   }
 
   void addAmount(int amount) {
-    num? value = num.tryParse(textEditingController.text);
+    num? value = num.tryParse(widget.controller.text);
     value ??= 0;
     value += amount;
-    textEditingController.text = value.toStringAsFixed(2);
+    widget.controller.text = value.toStringAsFixed(2);
   }
 }
