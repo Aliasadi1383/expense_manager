@@ -46,7 +46,7 @@ class _AmountInputState extends State<AmountInput> {
                     fontSize: 30,
                   ),
                 ),
-                _buildAmountField(textTheme),
+                _buildAmountField(textTheme,theme),
                 Column(
                   children: [
                     _buildChangeButton(
@@ -119,14 +119,14 @@ class _AmountInputState extends State<AmountInput> {
     );
   }
 
-  Widget _buildAmountField(TextTheme textTheme) {
+  Widget _buildAmountField(TextTheme textTheme,ColorScheme theme) {
     return Expanded(
       child: TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         style: textTheme.titleLarge!.copyWith(color: AppColors.mutedText),
         keyboardType: TextInputType.number,
         validator: (value) {
-          
+         
           final text = value?.trim() ?? '';
 
           if (text.isEmpty) {
@@ -141,11 +141,15 @@ class _AmountInputState extends State<AmountInput> {
 
           return null;
         },
+        
         inputFormatters: [FilteringTextInputFormatter.deny(',')],
         decoration: InputDecoration(
           hintText: '0',
           hintStyle: textTheme.titleLarge!.copyWith(
             color: AppColors.hintTextColor,
+          ),
+          errorStyle: textTheme.labelMedium!.copyWith(
+            color: theme.error
           ),
         ),
         textAlign: TextAlign.center,

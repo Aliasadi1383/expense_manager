@@ -35,6 +35,7 @@ class PaymentMethodInput extends StatelessWidget {
                 return null;
               },
               decoration: InputDecoration(
+                errorStyle: textTheme.labelMedium!.copyWith(color: theme.error),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide(width: 2, color: theme.error),

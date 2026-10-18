@@ -31,6 +31,9 @@ class DateTimeInput extends StatelessWidget {
           builder: (field) {
             return InputDecorator(
               decoration: InputDecoration(
+                 errorStyle: textTheme.labelMedium!.copyWith(
+            color: theme.error
+          ),
                 errorText: field.errorText,
                 border: InputBorder.none,
                 errorBorder: OutlineInputBorder(

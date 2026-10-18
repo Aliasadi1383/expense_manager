@@ -1,26 +1,18 @@
+import 'package:expense_manager/data/default_categories.dart';
+import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/theme/app_colors.dart';
+import 'package:expense_manager/widgets/category_icon_box.dart';
 import 'package:flutter/material.dart';
 
 class CategoryInput extends StatelessWidget {
-  final ValueChanged<String> onChanged;
-  final String? category;
+  final ValueChanged<Category> onChanged;
+  final Category? category;
 
   const CategoryInput({
     super.key,
     required this.onChanged,
     required this.category,
   });
-
-  final List<String> categories = const [
-    'Food',
-    'Shopping',
-    'Transportation',
-    'Housing & Bills',
-    'Health',
-    'Education',
-    'Entertainment',
-    'Other',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +22,14 @@ class CategoryInput extends StatelessWidget {
     return Card(
       color: theme.surface,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Category', style: textTheme.labelMedium),
             const SizedBox(height: 8),
             FormField<String>(
-              initialValue: category,
+              initialValue: category?.name,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null) {
@@ -48,6 +40,9 @@ class CategoryInput extends StatelessWidget {
               builder: (field) {
                 return InputDecorator(
                   decoration: InputDecoration(
+                    errorStyle: textTheme.labelMedium!.copyWith(
+                      color: theme.error,
+                    ),
                     border: InputBorder.none,
                     errorText: field.errorText,
                     errorBorder: OutlineInputBorder(
@@ -62,7 +57,7 @@ class CategoryInput extends StatelessWidget {
                         context,
                         theme,
                         textTheme,
-                        categories,
+                        defaultCategories,
                         field,
                       );
                     },
@@ -79,14 +74,21 @@ class CategoryInput extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Text(
-                            category ?? 'Selected Category',
-                            style: textTheme.labelMedium!.copyWith(
-                              color: AppColors.primaryText,
-                              fontSize: 14,
+                          if (category != null) ...[
+                            CategoryIconBox(category: category!),
+                            const SizedBox(width: 10),
+                          ],
+                          Expanded(
+                            child: Text(
+                              category?.name ?? 'Selected Category',
+                              style: textTheme.labelMedium!.copyWith(
+                                color: AppColors.primaryText,
+                                fontSize: 14,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const Spacer(),
+
                           Text(
                             'Change',
                             style: textTheme.labelMedium!.copyWith(
@@ -114,7 +116,7 @@ class CategoryInput extends StatelessWidget {
     BuildContext context,
     ColorScheme theme,
     TextTheme textTheme,
-    List<String> categories,
+    List<Category> categories,
     FormFieldState<String> field,
   ) {
     showDialog(
@@ -142,8 +144,8 @@ class CategoryInput extends StatelessWidget {
             direction: Axis.horizontal,
             spacing: 10,
             runSpacing: 10,
-            children: categories.map((categoryName) {
-              return _buildCategoryItem(context, categoryName, textTheme,field);
+            children: categories.map((category) {
+              return _buildCategoryItem(context, category, textTheme, field);
             }).toList(),
           ),
         );
@@ -153,18 +155,17 @@ class CategoryInput extends StatelessWidget {
 
   Widget _buildCategoryItem(
     BuildContext context,
-    String categoryName,
+    Category category,
     TextTheme textTheme,
     FormFieldState<String> field,
   ) {
     return SizedBox(
       width: (MediaQuery.sizeOf(context).width - 75) / 2,
-      height: MediaQuery.sizeOf(context).height / 18,
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
         onTap: () {
-          field.didChange(categoryName);
-          onChanged(categoryName);
+          field.didChange(category.name);
+          onChanged(category);
           Navigator.pop(context);
         },
         child: Ink(
@@ -174,13 +175,21 @@ class CategoryInput extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: Center(
-            child: Text(
-              categoryName,
-              style: textTheme.labelMedium!.copyWith(
-                color: AppColors.primaryText,
+          child: Row(
+            children: [
+              CategoryIconBox(category: category),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  category.name,
+                  style: textTheme.labelMedium!.copyWith(
+                    fontSize: 14,
+                    color: AppColors.primaryText,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

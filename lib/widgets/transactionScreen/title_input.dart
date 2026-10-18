@@ -33,6 +33,10 @@ class TitleInput extends StatelessWidget {
               ),
               controller: controller,
               decoration: InputDecoration(
+                counterStyle: TextStyle(
+                  fontSize: 13
+                ),
+                errorStyle: textTheme.labelMedium!.copyWith(color: theme.error),
                
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -71,6 +75,8 @@ class TitleInput extends StatelessWidget {
                 return null;
               },
               maxLength: 30,
+              
+              
             ),
           ],
         ),
