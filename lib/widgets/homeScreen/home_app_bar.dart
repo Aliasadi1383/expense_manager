@@ -38,9 +38,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Text(
                   'EXPENSE MANAGER',
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
+                  style: Theme.of(context).textTheme.labelMedium
                 ),
                 Text(
                   'Ali Asadi',

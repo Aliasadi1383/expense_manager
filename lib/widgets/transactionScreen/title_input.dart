@@ -37,7 +37,7 @@ class TitleInput extends StatelessWidget {
                   fontSize: 13
                 ),
                 errorStyle: textTheme.labelMedium!.copyWith(color: theme.error),
-               
+
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: theme.error, width: 2),

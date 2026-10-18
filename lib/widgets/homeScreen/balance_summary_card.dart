@@ -22,7 +22,7 @@ class _BalanceSummaryCardState extends State<BalanceSummaryCard> {
             offset: Offset(0, 20),
             blurRadius: 25,
             spreadRadius: -5,
-            color: theme.primary.withValues(alpha: 0.5)
+            color: theme.primary.withValues(alpha: 0.4)
           )
         ],
         gradient: LinearGradient(

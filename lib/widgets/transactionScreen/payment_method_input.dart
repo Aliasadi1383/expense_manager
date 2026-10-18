@@ -26,7 +26,7 @@ class PaymentMethodInput extends StatelessWidget {
             Text('Payment Method', style: textTheme.labelMedium),
             const SizedBox(height: 8),
             DropdownButtonFormField(
-               initialValue: account,
+              initialValue: account,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null) {
