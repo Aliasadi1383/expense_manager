@@ -1,3 +1,4 @@
+import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/models/transaction_type.dart';
 import 'package:expense_manager/state/transaction_state.dart';
@@ -25,7 +26,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   TextEditingController amountController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController notesController = TextEditingController();
-  String? category;
+  Category? category;
   DateTime? dateTime;
   String? account;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
