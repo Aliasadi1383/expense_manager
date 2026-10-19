@@ -25,6 +25,7 @@ class EmptyTransactionsView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 80,
