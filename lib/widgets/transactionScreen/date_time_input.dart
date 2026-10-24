@@ -1,4 +1,5 @@
 import 'package:expense_manager/theme/app_colors.dart';
+import 'package:expense_manager/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,7 +21,6 @@ class DateTimeInput extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: FormField(
-          
           initialValue: dateTime,
           validator: (value) {
             if (value == null) {
@@ -31,21 +31,13 @@ class DateTimeInput extends StatelessWidget {
           builder: (field) {
             return InputDecorator(
               decoration: InputDecoration(
-                 errorStyle: textTheme.labelMedium!.copyWith(
-            color: theme.error
-          ),
+                errorStyle: textTheme.labelMedium!.copyWith(color: theme.error),
                 errorText: field.errorText,
                 border: InputBorder.none,
                 errorBorder: OutlineInputBorder(
-                
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide(
-                    width: 2,
-                    color: theme.error,
-                  ),
-              
+                  borderSide: BorderSide(width: 2, color: theme.error),
                 ),
-               
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,11 +148,10 @@ class DateTimeInput extends StatelessWidget {
     }
 
     if (selectedDateTime.isAfter(DateTime.now())) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          duration: Duration(seconds: 3),
-          content: Text('The selected time has not arrived yet.'),
-        ),
+      CustomToast.show(
+        context,
+        'The selected time has not arrived yet.',
+        Icon(Icons.error, color: Theme.of(context).colorScheme.error),
       );
 
       return null;

@@ -3,8 +3,10 @@ import 'package:expense_manager/screen/history_screen.dart';
 import 'package:expense_manager/screen/home_screen.dart';
 import 'package:expense_manager/screen/reports_screen.dart';
 import 'package:expense_manager/screen/settings_screen.dart';
+import 'package:expense_manager/state/page_state.dart';
 import 'package:expense_manager/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,8 +16,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int selectedIndex = 0;
-
   final List<Widget> pages = const [
     HomeScreen(),
     HistoryScreen(),
@@ -25,19 +25,21 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final PageState tab = context.watch<PageState>();
+
     return Scaffold(
-      body: pages[selectedIndex],
+      body: pages[tab.selectedIndex],
       bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: selectedIndex,
+        selectedIndex: tab.selectedIndex,
         onChangeItem: (value) {
-          setState(() {
-            selectedIndex = value;
-          });
+          context.read<PageState>().changePage(value);
         },
         onAddTransaction: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>const AddTransactionScreen()),
+            MaterialPageRoute(
+              builder: (context) => const AddTransactionScreen(),
+            ),
           );
         },
       ),

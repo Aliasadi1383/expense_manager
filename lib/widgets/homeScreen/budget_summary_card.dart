@@ -11,6 +11,7 @@ class BudgetSummaryCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
+      margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
