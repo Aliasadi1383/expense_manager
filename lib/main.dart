@@ -1,4 +1,5 @@
 import 'package:expense_manager/screen/main_screen.dart';
+import 'package:expense_manager/state/page_state.dart';
 import 'package:expense_manager/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,10 +15,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TransactionState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TransactionState()),
+        ChangeNotifierProvider(create: (_) => PageState()),
+      ],
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Color(0xFFFBF7F8),
@@ -30,25 +33,25 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: AppColors.mutedText,
             ),
-            titleMedium: GoogleFonts.manrope(fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primaryText
+            titleMedium: GoogleFonts.manrope(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryText,
             ),
             titleLarge: GoogleFonts.manrope(
               fontSize: 34,
               fontWeight: FontWeight.bold,
-              
             ),
             labelSmall: GoogleFonts.hankenGrotesk(
               fontSize: 11,
               fontWeight: FontWeight.normal,
-              color: AppColors.mutedText
+              color: AppColors.mutedText,
             ),
             bodySmall: GoogleFonts.manrope(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.primaryText
-            )
+              color: AppColors.primaryText,
+            ),
           ),
         ),
         home: MainScreen(),
