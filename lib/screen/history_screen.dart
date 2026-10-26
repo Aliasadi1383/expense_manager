@@ -1,4 +1,4 @@
-import 'package:expense_manager/logic/history.dart';
+import 'package:expense_manager/logics/history_logic.dart';
 import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/models/transaction_type.dart';
 import 'package:expense_manager/screen/add_transaction_screen.dart';
@@ -43,77 +43,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final transactions = context.watch<TransactionState>().transactionList;
 
-    final typeFilteredTransactions = History.filterTransactionType(
+    final typeFilteredTransactions = HistoryLogic.filterTransactionType(
       transactions,
       _selectedFilterchips,
     );
 
-    final categoryFilteredTransactions = History.filterByCategory(
+    final categoryFilteredTransactions = HistoryLogic.filterByCategory(
       typeFilteredTransactions,
       _selectedCategory,
     );
 
-    final filteredTransactions = History.transactionSearch(
+    final filteredTransactions = HistoryLogic.transactionSearch(
       categoryFilteredTransactions,
       _searchController.text,
     );
 
     return Scaffold(
-      // appBar: HistoryHeader(
-      //   onPressed: () {
-      //     showGeneralDialog(
-      //       barrierDismissible: true,
-      //       barrierLabel: 'Close filter dialog',
-      //       context: context,
-
-      //       pageBuilder: (context, animation, secondaryAnimation) =>
-      //           FilterTransactionsDialog(
-      //             onApply: (type, category) {
-      //               setState(() {
-      //                 _selectedFilterchips = type;
-      //                 _selectedCategory = category;
-      //               });
-      //               CustomToast.show(
-      //                 context,
-      //                 'Filters applied',
-      //                 Icon(Icons.check_circle, color: AppColors.successLight),
-      //               );
-      //             },
-      //             onReset: () {
-      //               setState(() {
-      //                 _selectedCategory = null;
-      //                 _selectedFilterchips = null;
-      //               });
-      //               CustomToast.show(
-      //                 context,
-      //                 'Filters cleared',
-      //                 Icon(Icons.check_circle, color: AppColors.successLight),
-      //               );
-      //             },
-
-      //             selectedType: _selectedFilterchips,
-      //             selectedCategory: _selectedCategory,
-      //           ),
-      //       transitionBuilder: (context, animation, secondaryAnimation, child) {
-      //         if (animation.status == AnimationStatus.reverse) {
-      //           return FadeTransition(opacity: animation, child: child);
-      //         }
-
-      //         final slideAnimation =
-      //             Tween<Offset>(
-      //               begin: const Offset(0, 1),
-      //               end: Offset.zero,
-      //             ).animate(
-      //               CurvedAnimation(parent: animation, curve: Curves.easeOut),
-      //             );
-
-      //         return SlideTransition(position: slideAnimation, child: child);
-      //       },
-      //     );
-      //   },
-      //   hasActiveFilters:
-      //       _selectedFilterchips != null || _selectedCategory != null,
-      // ),
       body: CustomScrollView(
         
         slivers: [

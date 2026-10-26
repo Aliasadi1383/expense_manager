@@ -2,7 +2,7 @@ import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/models/transaction_type.dart';
 
-class History {
+class HistoryLogic {
   static List<Transaction> transactionSearch(
     List<Transaction> transactionList,
     String text,

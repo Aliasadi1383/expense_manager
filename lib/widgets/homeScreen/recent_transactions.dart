@@ -1,3 +1,4 @@
+import 'package:expense_manager/logics/home_logic.dart';
 import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/screen/add_transaction_screen.dart';
 import 'package:expense_manager/state/page_state.dart';
@@ -18,14 +19,8 @@ class RecentTransactions extends StatelessWidget {
     final List<Transaction> transactions = context
         .watch<TransactionState>()
         .transactionList;
-    final DateTime now = DateTime.now();
-    final List<Transaction> filterTransactionsDate = transactions
-        .where(
-          (element) => element.dateTime.isAfter(
-            DateTime(now.year, now.month, now.day - 7),
-          ),
-        )
-        .toList();
+    final recentTransactions =
+    HomeLogic.getRecentWeekTransactions(transactions);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -43,8 +38,8 @@ class RecentTransactions extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        if (filterTransactionsDate.isNotEmpty)
-          TransactionListItem(transactionList: filterTransactionsDate)
+        if (recentTransactions.isNotEmpty)
+          TransactionListItem(transactionList: recentTransactions)
         else
           EmptyTransactionsView(
             title: 'There are no recent transactions',

@@ -1,7 +1,9 @@
 import 'package:expense_manager/data/default_categories.dart';
+import 'package:expense_manager/logics/manage_categories_logic.dart';
 import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/models/transaction_type.dart';
+import 'package:expense_manager/state/page_state.dart';
 import 'package:expense_manager/state/transaction_state.dart';
 import 'package:expense_manager/theme/app_colors.dart';
 import 'package:expense_manager/widgets/category_icon_box.dart';
@@ -79,7 +81,7 @@ class ManageCategories extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          '-\$${_totalAmountTransactionsCategory(transactions, category, TransactionType.expense).toStringAsFixed(2)}',
+          '-\$${ManageCategoriesLogic.totalAmountTransactionsCategory(transactions, category, TransactionType.expense).toStringAsFixed(2)}',
           style: textTheme.bodySmall!.copyWith(
             fontSize: 13,
             color: theme.error,
@@ -89,7 +91,7 @@ class ManageCategories extends StatelessWidget {
         Text('View transactions'),
         const SizedBox(height: 5),
         Text(
-          '+\$${_totalAmountTransactionsCategory(transactions, category, TransactionType.income).toStringAsFixed(2)}',
+          '+\$${ManageCategoriesLogic.totalAmountTransactionsCategory(transactions, category, TransactionType.income).toStringAsFixed(2)}',
           style: textTheme.bodySmall!.copyWith(
             fontSize: 13,
             color: AppColors.success,
@@ -113,7 +115,7 @@ class ManageCategories extends StatelessWidget {
       children: [
         Text(category.name, style: textTheme.bodySmall!.copyWith(fontSize: 13)),
         Text(
-          '${_totalNumberTransactionsCategory(transactions, defaultCategories[index])} transactions',
+          '${ManageCategoriesLogic.totalNumberTransactionsCategory(transactions, defaultCategories[index])} transactions',
           style: textTheme.labelSmall!.copyWith(
             color: AppColors.hintTextColor.withValues(alpha: 0.8),
             fontSize: 13,
@@ -135,7 +137,7 @@ class ManageCategories extends StatelessWidget {
             backgroundColor: AppColors.surfaceLight,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            context.read<PageState>().changePage(0);
           },
           icon: Icon(Icons.arrow_back, color: AppColors.primaryText),
         ),
@@ -152,31 +154,5 @@ class ManageCategories extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  int _totalNumberTransactionsCategory(
-    List<Transaction> transactionList,
-    Category category,
-  ) {
-    return transactionList.fold(0, (previousValue, element) {
-      if (element.category == category) {
-        return previousValue += 1;
-      }
-      return previousValue;
-    });
-  }
-
-  double _totalAmountTransactionsCategory(
-    List<Transaction> transactionList,
-    Category category,
-    TransactionType type,
-  ) {
-    double sum = 0;
-    for (var element in transactionList) {
-      if (element.category == category && element.type == type) {
-        sum += element.amount;
-      }
-    }
-    return sum;
   }
 }
