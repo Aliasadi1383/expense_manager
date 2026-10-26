@@ -1,4 +1,5 @@
 import 'package:expense_manager/screen/main_screen.dart';
+import 'package:expense_manager/state/history_filter_state.dart';
 import 'package:expense_manager/state/page_state.dart';
 import 'package:expense_manager/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => TransactionState()),
         ChangeNotifierProvider(create: (_) => PageState()),
+        ChangeNotifierProvider(create: (_) => HistoryFilterState()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

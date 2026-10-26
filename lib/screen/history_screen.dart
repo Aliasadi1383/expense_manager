@@ -2,6 +2,7 @@ import 'package:expense_manager/logics/history_logic.dart';
 import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/models/transaction_type.dart';
 import 'package:expense_manager/screen/add_transaction_screen.dart';
+import 'package:expense_manager/state/history_filter_state.dart';
 import 'package:expense_manager/state/transaction_state.dart';
 import 'package:expense_manager/theme/app_colors.dart';
 import 'package:expense_manager/widgets/custom_toast.dart';
@@ -22,8 +23,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  Category? _selectedCategory;
-  TransactionType? _selectedFilterchips;
+ 
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -34,6 +34,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+   final Category? selectedCategory=context.watch<HistoryFilterState>().selectedCategory;
+   final TransactionType? selectedTransactionType=context.watch<HistoryFilterState>().selectedFilterchips;
+    
+   
+
+
     void navigateToAddTransaction() {
       Navigator.push(
         context,
@@ -45,12 +51,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final typeFilteredTransactions = HistoryLogic.filterTransactionType(
       transactions,
-      _selectedFilterchips,
+      selectedTransactionType,
     );
 
     final categoryFilteredTransactions = HistoryLogic.filterByCategory(
       typeFilteredTransactions,
-      _selectedCategory,
+      selectedCategory,
     );
 
     final filteredTransactions = HistoryLogic.transactionSearch(
@@ -73,11 +79,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       FilterTransactionsDialog(
-                        onApply: (type, category) {
-                          setState(() {
-                            _selectedFilterchips = type;
-                            _selectedCategory = category;
-                          });
+                        onApply: (type, category) { 
+                          context.read<HistoryFilterState>().historyFilter(category, type);
+
                           CustomToast.show(
                             context,
                             'Filters applied',
@@ -88,10 +92,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           );
                         },
                         onReset: () {
-                          setState(() {
-                            _selectedCategory = null;
-                            _selectedFilterchips = null;
-                          });
+                           context.read<HistoryFilterState>().clearFilters();
+
                           CustomToast.show(
                             context,
                             'Filters cleared',
@@ -102,8 +104,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           );
                         },
 
-                        selectedType: _selectedFilterchips,
-                        selectedCategory: _selectedCategory,
+                        selectedType: selectedTransactionType,
+                        selectedCategory: selectedCategory,
                       ),
                   transitionBuilder:
                       (context, animation, secondaryAnimation, child) {
@@ -133,7 +135,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 );
               },
               hasActiveFilters:
-                  _selectedFilterchips != null || _selectedCategory != null,
+                  selectedTransactionType != null || selectedCategory != null,
             ),
           ),
           SliverPadding(
@@ -148,11 +150,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     onSearchChanged: (_) {
                       setState(() {});
                     },
-                    selectedType: _selectedFilterchips,
+                    selectedType: selectedTransactionType,
                     onTypeChanged: (value) {
-                      setState(() {
-                        _selectedFilterchips = value;
-                      });
+
+                       context.read<HistoryFilterState>().setSelectedType(value);
                     },
                     onClearSearch: () {
                       setState(() {
@@ -161,13 +162,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   ),
 
-                  if (_selectedCategory != null) ...[
+                  if (selectedCategory != null) ...[
                     SelectedFilterCategory(
-                      categoryName: _selectedCategory!.name,
+                      categoryName: selectedCategory.name,
                       onRemove: () {
-                        setState(() {
-                          _selectedCategory = null;
-                        });
+                      context.read<HistoryFilterState>().setSelectedCategory(null);
+
                       },
                     ),
                     const SizedBox(height: 20),
@@ -221,9 +221,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   onClearFilters: () {
                     setState(() {
                       _searchController.clear();
-                      _selectedFilterchips = null;
-                      _selectedCategory = null;
                     });
+                    context.read<HistoryFilterState>().clearFilters();
                   },
                   showClearFiltersButton: true,
                 ),
