@@ -8,7 +8,7 @@ import 'package:expense_manager/theme/app_colors.dart';
 import 'package:expense_manager/widgets/animated_pressable.dart';
 import 'package:expense_manager/widgets/category_icon_box.dart';
 import 'package:expense_manager/widgets/custom_toast.dart';
-import 'package:expense_manager/widgets/homeScreen/interactive_text.dart';
+import 'package:expense_manager/widgets/interactive_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

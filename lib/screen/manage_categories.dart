@@ -3,10 +3,13 @@ import 'package:expense_manager/logics/manage_categories_logic.dart';
 import 'package:expense_manager/models/category.dart';
 import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/models/transaction_type.dart';
+import 'package:expense_manager/state/history_filter_state.dart';
 import 'package:expense_manager/state/page_state.dart';
 import 'package:expense_manager/state/transaction_state.dart';
 import 'package:expense_manager/theme/app_colors.dart';
 import 'package:expense_manager/widgets/category_icon_box.dart';
+import 'package:expense_manager/widgets/custom_toast.dart';
+import 'package:expense_manager/widgets/interactive_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +37,7 @@ class ManageCategories extends StatelessWidget {
 
               itemBuilder: (context, index) {
                 final Category category = defaultCategories[index];
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: SizedBox(
@@ -56,6 +60,7 @@ class ManageCategories extends StatelessWidget {
                               category,
                               textTheme,
                               theme,
+                              context,
                             ),
                           ],
                         ),
@@ -76,6 +81,7 @@ class ManageCategories extends StatelessWidget {
     Category category,
     TextTheme textTheme,
     ColorScheme theme,
+    BuildContext context,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -88,7 +94,20 @@ class ManageCategories extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text('View transactions'),
+        InteractiveText(
+          text: 'View Expense Transactions',
+          changePage: () {
+            context.read<PageState>().changePage(1);
+            context.read<HistoryFilterState>().historyFilter(
+              category,
+              TransactionType.expense,
+            );
+
+            CustomToast.show(context,'Filtered by ${category.name}',
+                  Icon(Icons.check_circle, color: AppColors.successLight),);
+          },
+          fontSize: 11,
+        ),
         const SizedBox(height: 5),
         Text(
           '+\$${ManageCategoriesLogic.totalAmountTransactionsCategory(transactions, category, TransactionType.income).toStringAsFixed(2)}',
@@ -98,7 +117,19 @@ class ManageCategories extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text('View transactions'),
+        InteractiveText(
+          text: 'View Income Transactions',
+          changePage: () {
+            context.read<PageState>().changePage(1);
+            context.read<HistoryFilterState>().historyFilter(
+              category,
+              TransactionType.income,
+            );
+            CustomToast.show(context,'Filtered by ${category.name}',
+                  Icon(Icons.check_circle, color: AppColors.successLight),);
+          },
+          fontSize: 11,
+        ),
       ],
     );
   }

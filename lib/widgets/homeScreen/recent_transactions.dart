@@ -4,7 +4,7 @@ import 'package:expense_manager/screen/add_transaction_screen.dart';
 import 'package:expense_manager/state/page_state.dart';
 import 'package:expense_manager/state/transaction_state.dart';
 import 'package:expense_manager/widgets/empty_transactions_view.dart';
-import 'package:expense_manager/widgets/homeScreen/interactive_text.dart';
+import 'package:expense_manager/widgets/interactive_text.dart';
 import 'package:expense_manager/widgets/transaction_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 class InteractiveText extends StatefulWidget {
   final String text;
   final VoidCallback changePage;
-  const InteractiveText({super.key, required this.text,required this.changePage});
+  final double fontSize;
+  const InteractiveText({super.key, required this.text,required this.changePage,this.fontSize=15});
 
   @override
   State<InteractiveText> createState() => _InteractiveText();
@@ -38,7 +39,7 @@ class _InteractiveText extends State<InteractiveText> {
       child: Text(
         widget.text,
         style: textTheme.bodySmall!.copyWith(
-          fontSize: 15,
+          fontSize: widget.fontSize,
           fontWeight: FontWeight.w600,
           fontFamily: GoogleFonts.hankenGrotesk().fontFamily,
           color: theme.primary,
