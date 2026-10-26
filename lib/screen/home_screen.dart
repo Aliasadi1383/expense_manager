@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/homeScreen/top_categories.dart';
 import 'package:expense_manager/widgets/homeScreen/balance_summary_card.dart';
 import 'package:expense_manager/widgets/homeScreen/budget_summary_card.dart';
 import 'package:expense_manager/widgets/homeScreen/home_app_bar.dart';
@@ -19,6 +20,8 @@ class HomeScreen extends StatelessWidget {
              BalanceSummaryCard(),
              const SizedBox(height: 24),
              BudgetSummaryCard(),
+             const SizedBox(height: 24),
+             TopCategories(),
              const SizedBox(height: 24),
              RecentTransactions(),
             ],

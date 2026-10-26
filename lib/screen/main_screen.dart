@@ -1,6 +1,7 @@
 import 'package:expense_manager/screen/add_transaction_screen.dart';
 import 'package:expense_manager/screen/history_screen.dart';
 import 'package:expense_manager/screen/home_screen.dart';
+import 'package:expense_manager/screen/manage_categories.dart';
 import 'package:expense_manager/screen/reports_screen.dart';
 import 'package:expense_manager/screen/settings_screen.dart';
 import 'package:expense_manager/state/page_state.dart';
@@ -21,6 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     HistoryScreen(),
     ReportsScreen(),
     SettingsScreen(),
+    ManageCategories()
   ];
 
   @override
@@ -30,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: pages[tab.selectedIndex],
       bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: tab.selectedIndex,
+        selectedIndex: tab.currentTabIndex,
         onChangeItem: (value) {
           context.read<PageState>().changePage(value);
         },

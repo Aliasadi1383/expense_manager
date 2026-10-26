@@ -10,8 +10,8 @@ class CategoryIconBox extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 50,
+      height: 50,
       decoration: BoxDecoration(
         color: category.backgroundColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12)
