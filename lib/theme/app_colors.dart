@@ -9,4 +9,5 @@ class AppColors {
   static const surfaceLight=Color(0xFFEFEFEF);
   static const hintTextColor=Color(0xFF777586);
   static const borderColor=Color(0xFFE2E8F0);
+  static const errorLight=Color(0xFFFFDAD6);
 }

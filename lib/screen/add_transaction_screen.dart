@@ -131,6 +131,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         category: category!,
                         dateTime: dateTime!,
                         account: account!,
+                        notes: notesController.text,
                       ),
                     );
 

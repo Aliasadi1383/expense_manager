@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AnimatedPressable extends StatefulWidget {
   final Widget child;
-  final VoidCallback onTap;
-  const AnimatedPressable({super.key,required this.child,required this.onTap});
+  final VoidCallback? onTap;
+  const AnimatedPressable({super.key,required this.child, this.onTap});
 
   @override
   State<AnimatedPressable> createState() {
