@@ -1,14 +1,16 @@
 import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/models/transaction_type.dart';
+import 'package:expense_manager/screen/transaction_details_screen.dart';
 import 'package:expense_manager/theme/app_colors.dart';
+import 'package:expense_manager/widgets/animated_pressable.dart';
 import 'package:expense_manager/widgets/category_icon_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class TransactionListItem extends StatelessWidget {
-  final List<Transaction>transactionList;
-  const TransactionListItem({super.key,required this.transactionList});
+  final List<Transaction> transactionList;
+  const TransactionListItem({super.key, required this.transactionList});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class TransactionListItem extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         separatorBuilder: (context, index) {
           return Divider(
+            height: 1,
             color: AppColors.hintTextColor,
             thickness: 0.3,
             indent: 20,
@@ -32,22 +35,36 @@ class TransactionListItem extends StatelessWidget {
         itemBuilder: (context, index) {
           final transaction = transactionList;
 
-          return Container(
-            padding:const EdgeInsets.all(12),
-            height: 70,
-            child: Row(
-              children: [
-                CategoryIconBox(category: transaction[index].category),
-                const SizedBox(width: 10),
-                _buildTransactionDetails(transaction, index, textTheme),
-                const SizedBox(width: 10),
-                _buildTransactionAmountAndAccount(
-                  transaction,
-                  index,
-                  textTheme,
-                  theme,
+          return AnimatedPressable(
+            onTap: () {
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      TransactionDetailsScreen(transaction: transaction[index]),
                 ),
-              ],
+              );
+
+            },
+            child: Container(
+              color: theme.surface,
+              padding: const EdgeInsets.all(12),
+              height: 70,
+              child: Row(
+                children: [
+                  CategoryIconBox(category: transaction[index].category),
+                  const SizedBox(width: 10),
+                  _buildTransactionDetails(transaction, index, textTheme),
+                  const SizedBox(width: 10),
+                  _buildTransactionAmountAndAccount(
+                    transaction,
+                    index,
+                    textTheme,
+                    theme,
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -83,7 +100,6 @@ class TransactionListItem extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildTransactionAmountAndAccount(
     List<Transaction> transaction,
