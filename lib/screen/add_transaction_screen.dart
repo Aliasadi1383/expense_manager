@@ -15,7 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+  final Transaction? transaction;
+  const AddTransactionScreen({super.key, this.transaction});
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -40,10 +41,27 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.transaction != null) {
+      selectedType = widget.transaction!.type;
+      amountController.text = widget.transaction!.amount.toStringAsFixed(2);
+      titleController.text = widget.transaction!.title;
+      category = widget.transaction!.category;
+      dateTime = widget.transaction!.dateTime;
+      account = widget.transaction!.account;
+      notesController.text = widget.transaction!.notes!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
+    
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+
         leading: IconButton(
           style: IconButton.styleFrom(backgroundColor: AppColors.surfaceLight),
           onPressed: () {
@@ -52,9 +70,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           icon: Icon(Icons.close, color: AppColors.primaryText),
         ),
         title: Text(
-          'Add Transaction',
+          widget.transaction == null ? 'Add Transaction' : 'Edit Transaction',
           style: Theme.of(context).textTheme.titleMedium,
         ),
+
+        actions: [
+          if (widget.transaction != null)
+            IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.errorLight.withValues(alpha: 0.5),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.delete, color: theme.error),
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -69,13 +100,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     if (selectedType != value) {
                       setState(() {
                         selectedType = value;
-                        amountController.clear();
-                        titleController.clear();
-                        notesController.clear();
-                        category = null;
-                        dateTime = null;
-                        account = null;
-                        _formKey = GlobalKey<FormState>();
+                        if (widget.transaction == null) {
+                          amountController.clear();
+                          titleController.clear();
+                          notesController.clear();
+                          category = null;
+                          dateTime = null;
+                          account = null;
+                          _formKey = GlobalKey<FormState>();
+                        }
                       });
                     }
                   },
@@ -122,20 +155,34 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     if (!_formKey.currentState!.validate()) {
                       return;
                     }
-
-                    context.read<TransactionState>().addTransaction(
-                      Transaction(
-                        type: selectedType,
-                        amount: double.parse(amountController.text),
-                        title: titleController.text,
-                        category: category!,
-                        dateTime: dateTime!,
-                        account: account!,
-                        notes: notesController.text,
-                      ),
-                    );
-
-                    Navigator.pop(context,true);
+                    if (widget.transaction == null) {
+                      context.read<TransactionState>().addTransaction(
+                        Transaction(
+                          type: selectedType,
+                          amount: double.parse(amountController.text),
+                          title: titleController.text,
+                          category: category!,
+                          dateTime: dateTime!,
+                          account: account!,
+                          notes: notesController.text,
+                        ),
+                      );
+                    } else {
+                      context.read<TransactionState>().editTransaction(
+                        Transaction(
+                          id: widget.transaction!.id,
+                          type: selectedType,
+                          amount: double.parse(amountController.text),
+                          title: titleController.text,
+                          category: category!,
+                          dateTime: dateTime!,
+                          account: account!,
+                          notes: notesController.text
+                        ),
+                      );
+                    }
+                   
+                    Navigator.pop(context);
                   },
 
                   icon: Icons.check_circle_outline,

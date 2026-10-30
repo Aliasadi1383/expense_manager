@@ -9,4 +9,14 @@ class TransactionState extends ChangeNotifier{
       transactionList.add(transaction);
       notifyListeners();
     }
+
+    void editTransaction(Transaction updatedTransaction){
+
+    final index=transactionList.indexWhere((transaction) =>transaction.id==updatedTransaction.id);
+
+    if (index==-1) return;
+
+    transactionList[index]=updatedTransaction;
+    notifyListeners();
+    }
 }

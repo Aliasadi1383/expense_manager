@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 
 class Transaction {
  final String id;
-  final TransactionType type;
+  TransactionType type;
   double amount;
   String title;
   Category category;
@@ -14,6 +14,7 @@ class Transaction {
   String? notes;
 
    Transaction({
+    String? id,
     required this.type,
     required this.amount,
     required this.title,
@@ -21,5 +22,5 @@ class Transaction {
     required this.dateTime,
     required this.account,
     this.notes
-   }):id=const Uuid().v4();
+   }):id=id??const Uuid().v4();
 }

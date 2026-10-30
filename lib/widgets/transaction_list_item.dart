@@ -42,7 +42,7 @@ class TransactionListItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      TransactionDetailsScreen(transaction: transaction[index]),
+                      TransactionDetailsScreen(transactionId: transaction[index].id,),
                 ),
               );
 

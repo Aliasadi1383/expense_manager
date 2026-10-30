@@ -1,8 +1,11 @@
+import 'package:expense_manager/models/transaction.dart';
+import 'package:expense_manager/screen/add_transaction_screen.dart';
 import 'package:expense_manager/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
-  const Header({super.key});
+  final Transaction transaction;
+  const Header({super.key,required this.transaction});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,9 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
               ),
               backgroundColor: AppColors.surfaceLight,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
             icon: Icon(Icons.arrow_back, color: AppColors.primaryText),
           ),
           Text('Transaction Details', style: textTheme.titleMedium),
@@ -33,7 +38,12 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddTransactionScreen(transaction:transaction ,)),
+              );
+            },
             icon: Icon(Icons.edit, color: theme.primary),
           ),
         ],
