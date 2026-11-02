@@ -3,6 +3,9 @@ import 'package:expense_manager/models/transaction.dart';
 import 'package:expense_manager/models/transaction_type.dart';
 import 'package:expense_manager/state/transaction_state.dart';
 import 'package:expense_manager/theme/app_colors.dart';
+import 'package:expense_manager/widgets/animated_pressable.dart';
+import 'package:expense_manager/widgets/custom_toast.dart';
+import 'package:expense_manager/widgets/delete_dialog.dart';
 import 'package:expense_manager/widgets/transactionScreen/amount_input.dart';
 import 'package:expense_manager/widgets/transactionScreen/category_input.dart';
 import 'package:expense_manager/widgets/transactionScreen/date_time_input.dart';
@@ -57,7 +60,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -80,8 +83,23 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               style: IconButton.styleFrom(
                 backgroundColor: AppColors.errorLight.withValues(alpha: 0.5),
               ),
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                final confirmed = await showDeleteDialog(context);
+
+                if (!context.mounted) return;
+
+                if (confirmed == true) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  context.read<TransactionState>().deleteTransaction(
+                    widget.transaction!.id,
+                  );
+                  CustomToast.show(
+                    context,
+                    'Transaction deleted successfully',
+                    Icon(Icons.check_circle, color: AppColors.successLight),
+                  );
+                }
               },
               icon: Icon(Icons.delete, color: theme.error),
             ),
@@ -150,44 +168,82 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 const SizedBox(height: 16),
                 NotesInput(controller: notesController),
                 const SizedBox(height: 16),
-                PrimaryButton(
-                  onPressed: () {
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-                    if (widget.transaction == null) {
-                      context.read<TransactionState>().addTransaction(
-                        Transaction(
-                          type: selectedType,
-                          amount: double.parse(amountController.text),
-                          title: titleController.text,
-                          category: category!,
-                          dateTime: dateTime!,
-                          account: account!,
-                          notes: notesController.text,
-                        ),
-                      );
-                    } else {
-                      context.read<TransactionState>().editTransaction(
-                        Transaction(
-                          id: widget.transaction!.id,
-                          type: selectedType,
-                          amount: double.parse(amountController.text),
-                          title: titleController.text,
-                          category: category!,
-                          dateTime: dateTime!,
-                          account: account!,
-                          notes: notesController.text
-                        ),
-                      );
-                    }
-                   
-                    Navigator.pop(context);
-                  },
 
-                  icon: Icons.check_circle_outline,
-                  text: 'Save Transaction',
+                AnimatedPressable(
+                  child: PrimaryButton(
+                    onPressed: () {
+                      if (!_formKey.currentState!.validate()) {
+                        return;
+                      }
+                      if (widget.transaction == null) {
+                        context.read<TransactionState>().addTransaction(
+                          Transaction(
+                            type: selectedType,
+                            amount: double.parse(amountController.text),
+                            title: titleController.text,
+                            category: category!,
+                            dateTime: dateTime!,
+                            account: account!,
+                            notes: notesController.text,
+                          ),
+                        );
+                      } else {
+                        context.read<TransactionState>().editTransaction(
+                          Transaction(
+                            id: widget.transaction!.id,
+                            type: selectedType,
+                            amount: double.parse(amountController.text),
+                            title: titleController.text,
+                            category: category!,
+                            dateTime: dateTime!,
+                            account: account!,
+                            notes: notesController.text,
+                          ),
+                        );
+                      }
+
+                      Navigator.pop(context);
+                    },
+
+                    icon: Icons.check,
+                    text: 'Save Transaction',
+                  ),
                 ),
+
+                if (widget.transaction != null) ...[
+                  const SizedBox(height: 16),
+
+                  AnimatedPressable(
+                    child: PrimaryButton(
+                      backgroundColor: AppColors.errorLight,
+                      foregroundColor: theme.error,
+                      textColor: theme.error,
+                      onPressed: () async {
+                        final confirmed = await showDeleteDialog(context);
+
+                        if (!context.mounted) return;
+
+                        if (confirmed == true) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          context.read<TransactionState>().deleteTransaction(
+                            widget.transaction!.id,
+                          );
+                          CustomToast.show(
+                            context,
+                            'Transaction deleted successfully',
+                            Icon(
+                              Icons.check_circle,
+                              color: AppColors.successLight,
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icons.delete,
+                      text: 'Delete Transaction',
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
